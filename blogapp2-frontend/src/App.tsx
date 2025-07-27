@@ -20,6 +20,7 @@ function App() {
     <div className="bg-black text-gray-100 min-h-screen">
       <div className="flex justify-center">
         <div className="w-20 p-4 flex flex-col items-start gap-6 sticky top-0 h-screen">
+          {/* Side Nav Icons */}
           <Link to="/home" className="p-2 rounded-full">
             <GrHomeRounded size={28} />
           </Link>
@@ -48,7 +49,7 @@ function App() {
             <Route path="login" element={<Login />} />
           </Routes>
         </div>
-        <div className="w-20 p-4"></div>
+        <div className="w-20 p-4">{/* this is a spacer */}</div>
       </div>
     </div>
   );

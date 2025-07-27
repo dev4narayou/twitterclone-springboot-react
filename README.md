@@ -12,12 +12,14 @@ A full-stack blog application with Spring Boot backend and React frontend.
 ## Tech Stack
 
 **Backend:**
+
 - Spring Boot 3.5.3
 - PostgreSQL
 - Spring Security
 - JWT Authentication
 
 **Frontend:**
+
 - React 18
 - TypeScript
 - Tailwind CSS
