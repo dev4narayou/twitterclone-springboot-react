@@ -25,27 +25,47 @@ echo "VITE_API_BASE_URL=http://$CURRENT_IP:8081/api" > blogapp2-frontend/.env
 echo "📝 Updating docker-compose.yml..."
 sed -i "s|VITE_API_BASE_URL: http://.*:8081/api|VITE_API_BASE_URL: http://$CURRENT_IP:8081/api|g" docker-compose.yml
 
-# Remove frontend images completely
-echo "🗑️ Removing old frontend images..."
-docker rmi blog-app_frontend 2>/dev/null || true
-docker rmi $(docker images -q blog-app_frontend) 2>/dev/null || true
+# Fix CORS configuration in docker-compose.yml
+echo "🌐 Updating CORS configuration..."
+sed -i "s|CORS_ORIGINS: http://localhost:3000,http://localhost:5173,http://localhost:5174|CORS_ORIGINS: http://$CURRENT_IP:3000,http://localhost:3000,http://localhost:5173,http://localhost:5174|g" docker-compose.yml
 
-# Clean up
-echo "🧹 Cleaning up..."
-docker image prune -f
-docker builder prune -f
+# Remove ALL images (not just frontend)
+echo "🗑️ Nuclear cleanup - removing all images and volumes..."
+docker system prune -af
+docker volume prune -f
+
+# Remove node_modules and any build artifacts
+rm -rf blogapp2-frontend/node_modules 2>/dev/null || true
+rm -rf blogapp2-frontend/dist 2>/dev/null || true
+rm -rf blogapp2-frontend/.vite 2>/dev/null || true
+
+# Update ALL possible environment references
+echo "VITE_API_BASE_URL=http://$CURRENT_IP:8081/api" > blogapp2-frontend/.env
+
+# Also fix the source code directly (crucial fix)
+sed -i "s|http://localhost:8081/api|http://$CURRENT_IP:8081/api|g" blogapp2-frontend/src/services/api.ts
 
 # Rebuild frontend with correct environment
 echo "🔨 Building frontend with correct API URL..."
-docker-compose build --no-cache frontend
+docker-compose build --no-cache --pull
+
+# Clear database volume to fix duplicate key issues
+echo "🗑️ Clearing database to fix duplicate key errors..."
+docker volume rm blog-app_postgres_data 2>/dev/null || true
 
 # Start all services
 echo "🚀 Starting all services..."
 docker-compose up -d
 
-# Wait for services to start
-echo "⏳ Waiting for services to start..."
-sleep 15
+# Wait for services to start (longer wait for database initialization)
+echo "⏳ Waiting for services to start and database to initialize..."
+sleep 30
+
+# Check if backend started successfully
+echo "🔍 Checking backend status..."
+docker-compose ps
+echo "=== Backend logs (last 10 lines) ==="
+docker-compose logs --tail=10 backend
 
 # Verify the fix
 echo "🔍 Verifying the fix..."
