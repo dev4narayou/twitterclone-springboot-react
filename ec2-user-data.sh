@@ -15,8 +15,8 @@ chmod +x /usr/local/bin/docker-compose
 mkdir -p /home/ec2-user/blog-app
 cd /home/ec2-user/blog-app
 
-# Clone your repository (UPDATE THIS URL!)
-git clone https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME.git .
+# Clone your repository
+git clone https://github.com/dev4narayou/twitterclone-springboot-react.git .
 
 # Create production environment file
 cat > .env << 'EOF'
@@ -26,6 +26,6 @@ CORS_ORIGINS=http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv
 EOF
 
 # Build and start services
-docker-compose -f docker-compose.prod.yml up -d
+docker-compose up -d
 
-echo "Deployment complete! App should be available on port 80"
+echo "Deployment complete! App should be available on port 3000"
