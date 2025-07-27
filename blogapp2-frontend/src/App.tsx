@@ -3,7 +3,6 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import { CgProfile } from "react-icons/cg";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
-import { MdHomeFilled } from "react-icons/md";
 import { GrHomeRounded } from "react-icons/gr";
 import { useAuth } from "./contexts/AuthContext";
 

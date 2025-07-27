@@ -1,6 +1,9 @@
 #!/bin/bash
-yum update -y
-yum install -y docker git curl
+set -e  # Exit on any error
+
+# Update and install packages (Amazon Linux 2023 uses dnf)
+dnf update -y
+dnf install -y docker git curl
 
 # Start Docker
 systemctl start docker
@@ -20,9 +23,12 @@ git clone https://github.com/dev4narayou/twitterclone-springboot-react.git .
 
 # Create production environment file
 cat > .env << 'EOF'
+DATABASE_URL=jdbc:postgresql://postgres:5432/blogapp
+DB_USERNAME=postgres
 DB_PASSWORD=production-secure-password-123
 JWT_SECRET=your-super-long-jwt-secret-for-production-make-it-at-least-64-characters-long
-CORS_ORIGINS=http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+LOG_LEVEL=INFO
+CORS_ORIGINS=http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3000
 EOF
 
 # Build and start services
