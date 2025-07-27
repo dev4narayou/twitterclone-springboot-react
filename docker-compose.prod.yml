@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # postgresql database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: blogapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-securepassword123}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # backend service
+  backend:
+    build: ./blogapp2-backend
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/blogapp
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD:-securepassword123}
+      JWT_SECRET: ${JWT_SECRET:-your-production-jwt-secret-make-it-very-long-and-random-for-security}
+      LOG_LEVEL: INFO
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # frontend service
+  frontend:
+    build: ./blogapp2-frontend
+    ports:
+      - "80:80"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080/api
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - ./nginx-production.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

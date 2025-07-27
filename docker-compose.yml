@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: blogapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./blogapp2-backend
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/blogapp
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      JWT_SECRET: your-production-jwt-secret-here-make-it-long-and-random
+      LOG_LEVEL: INFO
+      CORS_ORIGINS: http://localhost:3000,http://localhost:5173,http://localhost:5174
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build: ./blogapp2-frontend
+    ports:
+      - "3000:80"
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080/api
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

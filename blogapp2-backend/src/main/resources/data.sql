@@ -1,0 +1,230 @@
+-- insert test users first (referenced by posts)
+INSERT INTO
+    app_user (
+        username,
+        email,
+        password_hash,
+        email_verified,
+        created_at,
+        updated_at
+    )
+VALUES
+    (
+        'johndoe',
+        'john@example.com',
+        '$2a$10$examplehash1',
+        true,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        'janedoe',
+        'jane@example.com',
+        '$2a$10$examplehash2',
+        true,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        'admin',
+        'admin@example.com',
+        '$2a$10$examplehash3',
+        true,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        'alice',
+        'alice@example.com',
+        '$2a$10$examplehash4',
+        true,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        'bob',
+        'bob@example.com',
+        '$2a$10$examplehash5',
+        true,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    ),
+    (
+        'devmanoj',
+        'devmanojkumar08@gmail.com',
+        '$2a$10$e0MYzXyjpJS7Pd0RVvHwHe96PkFBwk7LQVOY5n/Qm.C8zyneKg0BC',
+        true,
+        CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP
+    );
+
+-- insert user roles (since roles are stored in a separate table)
+INSERT INTO
+    user_roles (user_id, role)
+VALUES
+    (1, 'USER'),
+    (2, 'USER'),
+    (3, 'ADMIN'),
+    (4, 'USER'),
+    (5, 'USER'),
+    (6, 'USER');
+
+-- insert test posts (author_id references app_user.id)
+INSERT INTO
+    post (
+        title,
+        content,
+        excerpt,
+        author_id,
+        created_at,
+        updated_at,
+        published,
+        view_count,
+        comment_count
+    )
+VALUES
+    (
+        'getting started with spring boot',
+        'spring boot makes it easy to create stand-alone, production-grade spring based applications. in this post, we will explore the basics of spring boot and how to get started with your first application.',
+        'learn the basics of spring boot and create your first application',
+        1,
+        '2025-01-15 10:30:00',
+        '2025-01-15 10:30:00',
+        true,
+        15,
+        0
+    ),
+    (
+        'understanding react hooks',
+        'react hooks revolutionized the way we write react components. usestate, useeffect, and custom hooks provide powerful ways to manage state and side effects in functional components.',
+        'master react hooks for modern component development',
+        2,
+        '2025-01-18 14:20:00',
+        '2025-01-18 14:20:00',
+        true,
+        23,
+        0
+    ),
+    (
+        'database design best practices',
+        'good database design is crucial for application performance and maintainability. this post covers normalization, indexing strategies, and common pitfalls to avoid.',
+        'essential tips for designing efficient databases',
+        3,
+        '2025-01-20 09:15:00',
+        '2025-01-20 09:15:00',
+        true,
+        8,
+        0
+    ),
+    (
+        'typescript vs javascript: when to use which',
+        'typescript adds static typing to javascript, but when should you use it? we explore the benefits and trade-offs of typescript in different project scenarios.',
+        'compare typescript and javascript for your next project',
+        4,
+        '2025-01-22 16:45:00',
+        '2025-01-22 16:45:00',
+        true,
+        31,
+        0
+    ),
+    (
+        'microservices architecture patterns',
+        'microservices offer scalability and flexibility but come with complexity. learn about common patterns like api gateway, circuit breaker, and event sourcing.',
+        'explore key patterns for building robust microservices',
+        1,
+        '2025-01-25 11:30:00',
+        '2025-01-25 11:30:00',
+        true,
+        19,
+        0
+    ),
+    (
+        'css grid vs flexbox: a complete guide',
+        'both css grid and flexbox are powerful layout tools. understand when to use each one and how they complement each other in modern web design.',
+        'master css layout with grid and flexbox',
+        2,
+        '2025-01-28 13:20:00',
+        '2025-01-28 13:20:00',
+        true,
+        12,
+        0
+    ),
+    (
+        'docker containerization basics',
+        'docker simplifies application deployment through containerization. learn how to create dockerfiles, manage images, and orchestrate containers.',
+        'get started with docker for application deployment',
+        5,
+        '2025-02-01 08:45:00',
+        '2025-02-01 08:45:00',
+        true,
+        27,
+        0
+    ),
+    (
+        'rest api design principles',
+        'well-designed rest apis are intuitive and maintainable. follow these principles for resource naming, http methods, status codes, and error handling.',
+        'build better apis with rest design principles',
+        3,
+        '2025-02-05 15:10:00',
+        '2025-02-05 15:10:00',
+        true,
+        22,
+        0
+    ),
+    (
+        'introduction to machine learning',
+        'machine learning is transforming industries. this beginner-friendly introduction covers supervised learning, unsupervised learning, and practical applications.',
+        'start your machine learning journey',
+        4,
+        '2025-02-08 12:00:00',
+        '2025-02-08 12:00:00',
+        true,
+        35,
+        0
+    ),
+    (
+        'git workflow strategies',
+        'effective git workflows improve team collaboration. compare gitflow, github flow, and gitlab flow to find the best strategy for your team.',
+        'optimize your team collaboration with git workflows',
+        5,
+        '2025-02-12 10:25:00',
+        '2025-02-12 10:25:00',
+        true,
+        18,
+        0
+    );
+
+-- insert some tags for the posts (using the post_tags table)
+INSERT INTO
+    post_tags (post_id, tag)
+VALUES
+    (1, 'spring'),
+    (1, 'java'),
+    (1, 'tutorial'),
+    (2, 'react'),
+    (2, 'javascript'),
+    (2, 'frontend'),
+    (3, 'database'),
+    (3, 'sql'),
+    (3, 'design'),
+    (4, 'typescript'),
+    (4, 'javascript'),
+    (4, 'programming'),
+    (5, 'microservices'),
+    (5, 'architecture'),
+    (5, 'patterns'),
+    (6, 'css'),
+    (6, 'frontend'),
+    (6, 'design'),
+    (7, 'docker'),
+    (7, 'devops'),
+    (7, 'containers'),
+    (8, 'api'),
+    (8, 'rest'),
+    (8, 'backend'),
+    (9, 'ml'),
+    (9, 'ai'),
+    (9, 'datascience'),
+    (10, 'git'),
+    (10, 'workflow'),
+    (10, 'collaboration');

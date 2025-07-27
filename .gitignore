@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Build outputs
+dist/
+build/
+*.jar
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Gradle
+.gradle/
+gradle-app.setting
+
+# Database
+*.db
+*.sqlite
+
+# Temporary files
+tmp/
+temp/
