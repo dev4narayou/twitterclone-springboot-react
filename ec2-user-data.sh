@@ -55,7 +55,11 @@ chown -R ec2-user:ec2-user /home/ec2-user/blog-app
 
 # Create production environment file
 echo "Creating environment file..."
-PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+# Try multiple methods to get public IP
+PUBLIC_IP=$(curl -s http://checkip.amazonaws.com || curl -s https://ipinfo.io/ip || curl -s https://api.ipify.org || echo "PLACEHOLDER_IP")
+echo "Detected public IP: $PUBLIC_IP"
+
+# Create backend .env file
 cat > .env << EOF
 DATABASE_URL=jdbc:postgresql://postgres:5432/blogapp
 DB_USERNAME=postgres
@@ -64,6 +68,13 @@ JWT_SECRET=your-super-long-jwt-secret-for-production-make-it-at-least-64-charact
 LOG_LEVEL=INFO
 CORS_ORIGINS=http://${PUBLIC_IP}:3000
 EOF
+
+# Create frontend .env file
+cat > blogapp2-frontend/.env << EOF
+VITE_API_BASE_URL=http://${PUBLIC_IP}:8081/api
+EOF
+
+echo "Created environment files with public IP: $PUBLIC_IP"
 
 # Build and start services
 echo "Current directory: $(pwd)"
