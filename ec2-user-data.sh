@@ -25,8 +25,14 @@ chmod +x /usr/local/bin/docker-compose
 mkdir -p /home/ec2-user/blog-app
 cd /home/ec2-user/blog-app
 
-# Clone your repository
+# Clone your repository (clone into current directory)
 git clone https://github.com/dev4narayou/twitterclone-springboot-react.git .
+
+# Verify the files are there
+ls -la
+
+# Change ownership to ec2-user
+chown -R ec2-user:ec2-user /home/ec2-user/blog-app
 
 # Create production environment file
 cat > .env << 'EOF'
@@ -37,6 +43,17 @@ JWT_SECRET=your-super-long-jwt-secret-for-production-make-it-at-least-64-charact
 LOG_LEVEL=INFO
 CORS_ORIGINS=http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4):3000
 EOF
+
+# Build and start services
+echo "Current directory: $(pwd)"
+echo "Files in directory:"
+ls -la
+
+# Verify docker-compose.yml exists
+if [ ! -f "docker-compose.yml" ]; then
+    echo "ERROR: docker-compose.yml not found!"
+    exit 1
+fi
 
 # Build and start services
 docker-compose up -d
