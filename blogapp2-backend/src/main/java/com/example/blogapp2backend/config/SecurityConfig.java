@@ -5,6 +5,7 @@ import com.example.blogapp2backend.security.JwtAuthenticationEntryPoint;
 import com.example.blogapp2backend.security.JwtAuthenticationFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -37,6 +38,9 @@ public class SecurityConfig {
 
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
+
+    @Value("${app.cors.allowedOrigins:http://localhost:3000,http://localhost:5173,http://localhost:5174}")
+    private String corsOrigins;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
@@ -93,7 +97,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("http://localhost:*"); // allow any port on localhost
+        
+        // parse cors origins from environment variable
+        String[] origins = corsOrigins.split(",");
+        for (String origin : origins) {
+            configuration.addAllowedOrigin(origin.trim());
+        }
+        
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
