@@ -97,13 +97,18 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        
+
+        // debug: log the cors origins being used
+        System.out.println("🌐 CORS Configuration - corsOrigins: " + corsOrigins);
+
         // parse cors origins from environment variable
         String[] origins = corsOrigins.split(",");
         for (String origin : origins) {
-            configuration.addAllowedOrigin(origin.trim());
+            String trimmedOrigin = origin.trim();
+            System.out.println("🌐 Adding CORS origin: " + trimmedOrigin);
+            configuration.addAllowedOrigin(trimmedOrigin);
         }
-        
+
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
