@@ -44,6 +44,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        System.out.println("🔧 JWT Filter Bean - corsOrigins value: '" + corsOrigins + "'");
         return new JwtAuthenticationFilter();
     }
 
