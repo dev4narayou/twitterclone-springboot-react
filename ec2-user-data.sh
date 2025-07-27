@@ -5,6 +5,13 @@ set -e  # Exit on any error
 dnf update -y
 dnf install -y docker git curl
 
+# Add swap memory for t2.micro (1GB RAM + 1GB swap = 2GB total)
+fallocate -l 1G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+
 # Start Docker
 systemctl start docker
 systemctl enable docker
