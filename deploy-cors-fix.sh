@@ -11,6 +11,10 @@ docker system prune -f
 CURRENT_IP=$(curl -s http://checkip.amazonaws.com/)
 echo "📍 detected ip: $CURRENT_IP"
 
+# force rebuild backend with no cache
+echo "🔨 force rebuilding backend..."
+docker-compose build --no-cache backend
+
 # start database first
 echo "🗄️ starting database..."
 docker-compose up -d postgres
