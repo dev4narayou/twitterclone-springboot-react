@@ -26,11 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true
-)
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -69,25 +65,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // enable cors with custom configuration
-            .csrf(csrf -> csrf.disable())
-            .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                // public endpoints - authentication and registration
-                .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
-                // public test endpoint
-                .requestMatchers("/api/test/public").permitAll()
-                // public read access to posts and users (GET only)
-                .requestMatchers(HttpMethod.GET, "/api/posts", "/api/posts/*").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/*").permitAll()
-                // h2 console for development
-                .requestMatchers("/h2-console/**").permitAll()
-                // static resources
-                .requestMatchers("/", "/favicon.ico", "/error").permitAll()
-                // all other requests require authentication
-                .anyRequest().authenticated()
-            );
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // enable cors with custom
+                                                                                   // configuration
+                .csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        // public endpoints - authentication and registration
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                        // public test endpoint
+                        .requestMatchers("/api/test/public").permitAll()
+                        // public read access to posts and users (GET only)
+                        .requestMatchers(HttpMethod.GET, "/api/posts", "/api/posts/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/*").permitAll()
+                        // h2 console for development
+                        .requestMatchers("/h2-console/**").permitAll()
+                        // static resources
+                        .requestMatchers("/", "/favicon.ico", "/error").permitAll()
+                        // all other requests require authentication
+                        .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
