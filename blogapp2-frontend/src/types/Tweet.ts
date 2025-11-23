@@ -2,6 +2,7 @@
 // this is called a "type definition" in typescript
 export interface Tweet {
     id: string;           // unique identifier for each tweet
+    userId: number;       // id of the user who posted it
     username: string;     // the user who posted it
     handle: string;       // the @handle (like @john_doe)
     content: string;      // the actual tweet text
@@ -11,5 +12,5 @@ export interface Tweet {
     retweets: number;     // number of retweets
     replies: number;      // number of replies
     views: number;        // number of views
-    avatar: string;       // user's profile picture url
+
 }

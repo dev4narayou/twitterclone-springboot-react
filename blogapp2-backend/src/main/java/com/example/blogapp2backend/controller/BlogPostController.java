@@ -32,10 +32,9 @@ public class BlogPostController {
     public ResponseEntity<Page<PostSummaryResponse>> getPostSummaries(Pageable pageable) {
         // Create pageable with default sorting by createdAt descending (newest first)
         Pageable sortedPageable = PageRequest.of(
-            pageable.getPageNumber(),
-            pageable.getPageSize(),
-            Sort.by(Sort.Direction.DESC, "createdAt")
-        );
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<PostSummaryResponse> posts = postService.getPublishedPostSummaries(sortedPageable);
         return ResponseEntity.ok(posts);
     }
@@ -79,5 +78,15 @@ public class BlogPostController {
 
         Page<PostResponse> myPosts = postService.getUserPosts(currentUser.getId(), pageable);
         return ResponseEntity.ok(myPosts);
+    }
+
+    // PUBLIC: Get posts by specific user (published only)
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Page<PostResponse>> getPostsByUser(
+            @PathVariable Long userId,
+            Pageable pageable) {
+
+        Page<PostResponse> posts = postService.getUserPublishedPosts(userId, pageable);
+        return ResponseEntity.ok(posts);
     }
 }

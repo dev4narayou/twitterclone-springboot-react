@@ -14,23 +14,23 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final com.example.blogapp2backend.mapper.UserMapper userMapper;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, com.example.blogapp2backend.mapper.UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.findAll();
+    public List<com.example.blogapp2backend.dto.response.user.PublicUserResponse> getAllUsers() {
+        return userService.findAll().stream()
+                .map(userMapper::toPublicResponse)
+                .collect(java.util.stream.Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
-        return userService.getUserById(id);
-    }
-
-    @PostMapping
-    public User saveUser(@RequestBody User user) {
-        return userService.saveUser(user);
+    public com.example.blogapp2backend.dto.response.user.PublicUserResponse getUser(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return userMapper.toPublicResponse(user);
     }
 }

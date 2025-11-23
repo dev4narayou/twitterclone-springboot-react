@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CgProfile } from "react-icons/cg";
+import { FaUserCircle } from "react-icons/fa";
 import { BlogService } from "../services/blogservice";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -9,11 +9,13 @@ interface TweetComposerProps {
 
 const TweetComposer = ({ onPostCreated }: TweetComposerProps) => {
   const [tweetText, setTweetText] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const { isAuthenticated } = useAuth();
 
   // function to handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // prevents the page from refreshing
+    setError(null);
 
     if (tweetText.trim()) {
       try {
@@ -29,9 +31,16 @@ const TweetComposer = ({ onPostCreated }: TweetComposerProps) => {
         setTweetText("");
         // refresh the feed to show the new post
         onPostCreated?.();
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to create post:", error);
-        // you might want to show an error message to the user here
+        if (error.message && error.message.includes("Content must be at least 10 characters")) {
+             setError("Post must be at least 10 characters long.");
+        } else if (error.message && error.message.includes("Validation failed")) {
+             // try to extract specific validation error if possible, otherwise generic
+             setError("Validation failed. Please check your post length.");
+        } else {
+             setError("Failed to post. Please try again.");
+        }
       }
     }
   };
@@ -55,15 +64,26 @@ const TweetComposer = ({ onPostCreated }: TweetComposerProps) => {
     <div className="p-4 border-b border-gray-700">
       <form onSubmit={handleSubmit}>
         <div className="flex gap-3">
-          <CgProfile size={40} className="text-gray-400" />
+          <div className="flex-shrink-0">
+            <FaUserCircle className="w-10 h-10 text-gray-500" />
+          </div>
           <div className="flex-1">
             <textarea
               value={tweetText}
-              onChange={(e) => setTweetText(e.target.value)}
+              onChange={(e) => {
+                  setTweetText(e.target.value);
+                  if (error) setError(null);
+              }}
               placeholder="what's happening?"
               className="w-full bg-transparent border-none text-white text-xl resize-none min-h-[80px] py-3 font-sans placeholder:text-gray-500 focus:outline-none"
               maxLength={280} // twitter's character limit
             />
+
+            {error && (
+                <div className="text-red-500 text-sm mb-2">
+                    {error}
+                </div>
+            )}
 
             <div className="flex justify-between items-center mt-3">
               <span className="text-gray-500 text-sm">

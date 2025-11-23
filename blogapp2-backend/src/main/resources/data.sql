@@ -56,7 +56,8 @@ VALUES
         true,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
-    );
+    )
+ON CONFLICT DO NOTHING;
 
 -- insert user roles (since roles are stored in a separate table)
 INSERT INTO
@@ -67,7 +68,8 @@ VALUES
     (3, 'ADMIN'),
     (4, 'USER'),
     (5, 'USER'),
-    (6, 'USER');
+    (6, 'USER')
+ON CONFLICT DO NOTHING;
 
 -- insert test posts (author_id references app_user.id)
 INSERT INTO
@@ -192,7 +194,8 @@ VALUES
         true,
         18,
         0
-    );
+    )
+ON CONFLICT DO NOTHING;
 
 -- insert some tags for the posts (using the post_tags table)
 INSERT INTO
@@ -227,4 +230,5 @@ VALUES
     (9, 'datascience'),
     (10, 'git'),
     (10, 'workflow'),
-    (10, 'collaboration');
+    (10, 'collaboration')
+ON CONFLICT DO NOTHING;

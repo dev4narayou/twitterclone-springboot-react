@@ -39,11 +39,12 @@ services:
       retries: 3
 
   frontend:
-    build: ./blogapp2-frontend
+    build:
+      context: ./blogapp2-frontend
+      args:
+        VITE_API_BASE_URL: http://3.25.70.97:8081/api
     ports:
       - "3000:80"
-    environment:
-      VITE_API_BASE_URL: http://3.25.70.97:8081/api
     depends_on:
       - backend
 

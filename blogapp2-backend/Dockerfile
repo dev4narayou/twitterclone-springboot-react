@@ -1,5 +1,5 @@
-# use official openjdk image as base
-FROM openjdk:21-jdk-slim
+# use amazon corretto (reliable jdk distribution)
+FROM amazoncorretto:21-alpine-jdk
 
 WORKDIR /app
 

@@ -83,6 +83,7 @@ const Feed = () => {
 
               const tweet: Tweet = {
                 id: postId,
+                userId: post.author.id,
                 username: authorName,
                 handle: `@${authorName.toLowerCase().replace(/\s+/g, "")}`,
                 content: post.excerpt || post.title || "no content available",
@@ -92,7 +93,6 @@ const Feed = () => {
                 retweets: 0,
                 replies: 0,
                 views: post.viewCount || Math.floor(Math.random() * 1000) + 100,
-                avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${authorName}`,
               };
 
               return <TweetCard key={postId} tweet={tweet} />;

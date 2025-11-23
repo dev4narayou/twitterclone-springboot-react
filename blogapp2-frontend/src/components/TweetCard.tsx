@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
 import type { Tweet } from "../types/Tweet";
-import { FaRegComment, FaRetweet, FaRegHeart } from "react-icons/fa";
+import { FaRegComment, FaRetweet, FaRegHeart, FaUserCircle } from "react-icons/fa";
 
 // this is called a "props interface" - it defines what data this component expects
 interface TweetCardProps {
@@ -12,19 +13,29 @@ const TweetCard = ({ tweet }: TweetCardProps) => {
     <div className="p-4 border-b border-gray-700 hover:bg-gray-900/50 cursor-pointer transition-colors">
       {/* user info section */}
       <div className="flex gap-3">
-        <img
-          src={tweet.avatar}
-          alt={`${tweet.username} avatar`}
-          className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-        />
+        <div className="flex-shrink-0">
+          <FaUserCircle className="w-10 h-10 text-gray-500" />
+        </div>
         <div className="flex-1">
           {/* user info line */}
           <div className="flex items-center gap-1 mb-1">
-            <span className="font-bold text-white">{tweet.username}</span>
-            <span className="text-gray-500">{tweet.handle}</span>
+            <Link
+              to={`/profile/${tweet.userId}`}
+              className="font-bold text-white hover:underline"
+              onClick={(e: React.MouseEvent) => e.stopPropagation()} // prevent triggering the card click
+            >
+              {tweet.username}
+            </Link>
+            <Link
+              to={`/profile/${tweet.userId}`}
+              className="text-gray-500 hover:text-gray-400"
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+            >
+              {tweet.handle}
+            </Link>
             <span className="text-gray-500">·</span>
             <span
-              className="text-gray-500 cursor-pointer hover:underline"
+              className="text-gray-500 hover:underline"
               title={tweet.fullTimestamp}
             >
               {tweet.timestamp}

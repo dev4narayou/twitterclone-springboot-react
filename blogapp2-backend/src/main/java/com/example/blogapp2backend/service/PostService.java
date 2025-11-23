@@ -143,6 +143,11 @@ public class PostService {
         return posts.map(postMapper::toResponse);
     }
 
+    public Page<PostResponse> getUserPublishedPosts(Long userId, Pageable pageable) {
+        Page<Post> posts = postRepository.findByAuthorIdAndPublishedTrueOrderByCreatedAtDesc(userId, pageable);
+        return posts.map(postMapper::toResponse);
+    }
+
     public List<Post> getAllPosts() {
         return postRepository.findAll();
     }
@@ -154,20 +159,20 @@ public class PostService {
 
         // create pageable object with sorting by creation date (newest first)
         Pageable pageable = PageRequest.of(pageIndex, limit,
-            Sort.by(Sort.Direction.DESC, "createdAt"));
+                Sort.by(Sort.Direction.DESC, "createdAt"));
 
         // get page of posts from repository
         Page<Post> postPage = postRepository.findAll(pageable);
 
         // build paginated response
         return PaginatedResponse.<Post>builder()
-            .data(postPage.getContent())
-            .totalItems((int) postPage.getTotalElements())
-            .totalPages(postPage.getTotalPages())
-            .currentPage(page)
-            .hasNext(postPage.hasNext())
-            .hasPrevious(postPage.hasPrevious())
-            .build();
+                .data(postPage.getContent())
+                .totalItems((int) postPage.getTotalElements())
+                .totalPages(postPage.getTotalPages())
+                .currentPage(page)
+                .hasNext(postPage.hasNext())
+                .hasPrevious(postPage.hasPrevious())
+                .build();
     }
 
 }

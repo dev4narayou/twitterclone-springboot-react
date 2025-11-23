@@ -1,5 +1,12 @@
 import { apiRequest } from "./api";
 
+interface UserResponse {
+    id: number;
+    username: string;
+    email: string;
+    roles: string[];
+}
+
 interface LoginRequest {
     usernameOrEmail: string;
     password: string;
@@ -14,7 +21,7 @@ interface LoginResponse {
 }
 
 interface RegisterRequest {
-    username: string;
+    userName: string;
     email: string;
     password: string;
 }
@@ -29,8 +36,8 @@ export const AuthService = {
     },
 
     // register new user
-    async register(userData: RegisterRequest): Promise<LoginResponse> {
-        return await apiRequest<LoginResponse>("/auth/register", {
+    async register(userData: RegisterRequest): Promise<UserResponse> {
+        return await apiRequest<UserResponse>("/auth/register", {
             method: "POST",
             body: JSON.stringify(userData),
         });

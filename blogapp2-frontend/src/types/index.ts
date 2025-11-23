@@ -10,6 +10,7 @@ export interface User {
     joinedAt: string;
     postCount?: number;
     email?: string; // optional since it's not always returned in responses
+    profilePictureUrl?: string;
 }
 
 export interface BlogPost {

@@ -5,6 +5,9 @@ import { CgProfile } from "react-icons/cg";
 import { FiLogIn, FiLogOut } from "react-icons/fi";
 import { GrHomeRounded } from "react-icons/gr";
 import { useAuth } from "./contexts/AuthContext";
+import Register from "./pages/Register";
+
+import Profile from "./pages/Profile";
 
 function App() {
   const navigate = useNavigate();
@@ -44,8 +47,10 @@ function App() {
           <Routes>
             <Route index element={<Home />} />
             <Route path="home" element={<Home />} />
-            <Route path="profile" element={<div>Profile Page</div>} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="profile/:userId" element={<Profile />} />
             <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
           </Routes>
         </div>
         <div className="w-20 p-4">{/* this is a spacer */}</div>

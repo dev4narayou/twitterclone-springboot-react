@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { FiEye, FiEyeOff, FiLogIn } from "react-icons/fi";
 import { AuthService } from "../services/authservice";
 import { useAuth } from "../contexts/AuthContext";
+
 
 interface LoginFormData {
   usernameOrEmail: string;
@@ -159,9 +160,9 @@ const Login = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-400 text-sm">
             don't have an account?{" "}
-            <button className="text-blue-400 hover:text-blue-300 transition-colors">
+            <Link to="/register" className="text-blue-400 hover:text-blue-300 transition-colors">
               create one
-            </button>
+            </Link>
           </p>
         </div>
 

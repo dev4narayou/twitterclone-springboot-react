@@ -22,6 +22,14 @@ export const BlogService = {
         );
     },
 
+    // get posts by user
+    async getPostsByUser(userId: number, page = 1, limit = 10): Promise<PaginatedResponse<BlogPost>> {
+        const springPage = page - 1;
+        return await apiRequest<PaginatedResponse<BlogPost>>(
+            `/posts/user/${userId}?page=${springPage}&size=${limit}`
+        );
+    },
+
     // create new blog post
     async createPost(postData: CreatePostRequest): Promise<BlogPost> {
         // auth check

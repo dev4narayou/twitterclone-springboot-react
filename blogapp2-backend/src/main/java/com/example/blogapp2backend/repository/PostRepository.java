@@ -23,4 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     // Find posts by tag
     Page<Post> findByTagsContainingAndPublishedTrue(String tag, Pageable pageable);
+
+    // Find published posts by author
+    Page<Post> findByAuthorIdAndPublishedTrueOrderByCreatedAtDesc(Long authorId, Pageable pageable);
 }
